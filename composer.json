@@ -1,7 +1,9 @@
 {
-    "name": "wyrihaximus/react-inspector-bunny",
+    "name": "react-inspector/bunny",
     "license": "MIT",
-    "description": "Bunny bindings",
+    "description": "\uD83D\uDC07 Bunny bindings",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Cees-Jan Kiewiet",
@@ -10,20 +12,18 @@
     ],
     "require": {
         "php": "^7.0",
-        "wyrihaximus/react-inspector": "dev-master"
+        "react-inspector/metric": "dev-master",
+        "react-inspector/stream": "dev-master"
     },
     "require-dev": {
-        "jakub-onderka/php-console-highlighter": "^0.3.2",
-        "jakub-onderka/php-parallel-lint": "^0.9.2",
-        "phpunit/phpunit": "^6.0",
-        "squizlabs/php_codesniffer": "^2.6"
+        "wyrihaximus/async-test-utilities": "^1.1"
     },
     "autoload": {
         "files": ["src/include.php"]
     },
     "autoload-dev": {
         "psr-4": {
-            "WyriHaximus\\React\\Tests\\Inspector\\Bunny\\": "src/"
+            "ReactInspector\\Tests\\Bunny\\": "src/"
         }
     },
     "config": {
