@@ -1,0 +1,13 @@
+parameters:
+	ignoreErrors:
+		-
+			identifier: ergebnis.noParameterWithNullableTypeDeclaration
+			path: ../../src/BunnyInstrumentation.php
+		-
+			identifier: shipmonk.deadConstant
+			path: ../../src/BunnyInstrumentation.php
+
+#	ergebnis:
+#		noExtends:
+#			classesAllowedToBeExtended:
+#				- Psr\Log\AbstractLogger
