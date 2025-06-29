@@ -1,1 +1,3 @@
-# reactphp-event-loop-inspector-f42-bunny
+# bunny
+
+Open Telemetry Auto Instrumentation for Bunny
