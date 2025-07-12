@@ -1,0 +1,23 @@
+on:
+  repository_dispatch:
+    types:
+      - dependency_update # For Packagist Conductor
+  schedule:
+    - cron: '0 3 * * *'
+  push:
+    branches:
+      - 'main'
+      - 'master'
+  issues:
+    types:
+      - edited
+
+name: Utils
+
+permissions:
+  contents: write
+
+jobs:
+  ci:
+    name: Continuous Integration
+    uses: WyriHaximus/github-workflows/.github/workflows/package-utils.yaml@run-renovate-on-github-actions
