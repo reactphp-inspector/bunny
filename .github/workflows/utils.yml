@@ -16,11 +16,12 @@ name: Utils
 
 permissions:
   contents: write
-  security-events: read
+  security-events: write
   pull-requests: write
   issues: write
   checks: write
   statuses: write
+  packages: write
 
 jobs:
   ci:
