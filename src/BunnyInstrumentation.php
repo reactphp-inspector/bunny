@@ -275,10 +275,6 @@ final class BunnyInstrumentation
                 $scope->detach();
                 $span = Span::fromContext($scope->context());
 
-                if ($success === false) {
-                    $span->setStatus(StatusCode::STATUS_ERROR);
-                }
-
                 if ($exception instanceof Throwable) {
                     $span->recordException($exception);
                     $span->setStatus(StatusCode::STATUS_ERROR);
