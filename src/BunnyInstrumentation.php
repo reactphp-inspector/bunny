@@ -82,7 +82,7 @@ final class BunnyInstrumentation
 
                 $spanBuilder = $instrumentation
                     ->tracer()
-                    ->spanBuilder($routingKey . ' publish')
+                    ->spanBuilder($exchange . ' ' . $routingKey . ' publish')
                     ->setParent($parentContext)
                     ->setSpanKind(SpanKind::KIND_PRODUCER)
                     // code
@@ -111,7 +111,6 @@ final class BunnyInstrumentation
                 $span    = $spanBuilder->startSpan();
                 $context = $span->storeInContext($parentContext);
 
-                $headers    = $params[1] ?? [];
                 $propagator = Globals::propagator();
                 $propagator->inject($headers, ArrayAccessGetterSetter::getInstance(), $context);
                 $params[1] = $headers;

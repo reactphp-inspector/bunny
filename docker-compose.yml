@@ -1,0 +1,19 @@
+services:
+  rabbit_node_1:
+    image: 'rabbitmq:3-management'
+    entrypoint: /opt/bunny/etc/docker/rabbitmq/entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+    command: rabbitmq-server
+    environment:
+      RABBITMQ_DEFAULT_USER: testuser
+      RABBITMQ_DEFAULT_PASS: testpassword
+      RABBITMQ_DEFAULT_VHOST: testvhost
+      RABBITMQ_ERLANG_COOKIE: bunny-test-secret
+      CONFIG_NAME: "${CONFIG_NAME:-rabbitmq.tls.verify_peer}"
+    volumes:
+      - .:/opt/bunny
+    hostname: rabbit_node_1
+    ports:
+      - "5672:5672"
+      - "5673:5673"
+      - "15672:15672"
+    tty: true
