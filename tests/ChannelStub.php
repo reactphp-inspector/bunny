@@ -26,6 +26,9 @@ use Bunny\Protocol\MethodTxRollbackOkFrame;
 use Bunny\Protocol\MethodTxSelectOkFrame;
 use Evenement\EventEmitterTrait;
 use LogicException;
+use OpenTelemetry\Context\Context;
+use OpenTelemetry\Context\ContextStorageScopeInterface;
+use Throwable;
 
 use function is_callable;
 
@@ -35,6 +38,10 @@ final class ChannelStub implements ChannelInterface
 
     /** @var (callable(Message): mixed)|null */
     private $consumeCallback = null;
+
+    public Throwable|null $throwOnNextCall = null;
+
+    public bool $detachContextBeforeReturn = false;
 
     public function getMode(): ChannelMode
     {
@@ -87,16 +94,25 @@ final class ChannelStub implements ChannelInterface
 
     public function ack(Message $message, bool $multiple = false): bool
     {
+        $this->throwIfRequested();
+        $this->detachContextIfRequested();
+
         return false;
     }
 
     public function nack(Message $message, bool $multiple = false, bool $requeue = true): bool
     {
+        $this->throwIfRequested();
+        $this->detachContextIfRequested();
+
         return false;
     }
 
     public function reject(Message $message, bool $requeue = true): bool
     {
+        $this->throwIfRequested();
+        $this->detachContextIfRequested();
+
         return false;
     }
 
@@ -108,6 +124,9 @@ final class ChannelStub implements ChannelInterface
     /** @param array<string, mixed> $headers */
     public function publish(string $body, array $headers = [], string $exchange = '', string $routingKey = '', bool $mandatory = false, bool $immediate = false): int|bool
     {
+        $this->throwIfRequested();
+        $this->detachContextIfRequested();
+
         return $mandatory ? false : 1;
     }
 
@@ -200,5 +219,28 @@ final class ChannelStub implements ChannelInterface
     public function recover(bool $requeue = false): MethodBasicRecoverOkFrame
     {
         throw new LogicException('Not implemented.');
+    }
+
+    private function throwIfRequested(): void
+    {
+        if (! $this->throwOnNextCall instanceof Throwable) {
+            return;
+        }
+
+        $throwable             = $this->throwOnNextCall;
+        $this->throwOnNextCall = null;
+
+        throw $throwable;
+    }
+
+    private function detachContextIfRequested(): void
+    {
+        if (! $this->detachContextBeforeReturn) {
+            return;
+        }
+
+        while (($scope = Context::storage()->scope()) instanceof ContextStorageScopeInterface) {
+            $scope->detach();
+        }
     }
 }
