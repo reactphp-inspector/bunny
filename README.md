@@ -19,7 +19,7 @@ composer require react-inspector/bunny
 # Todo
 
 - [X] Port initial implementation over from private project
-- [ ] Add Unit tests, look at https://github.com/opentelemetry-php/contrib-auto-reactphp for inspiration
+- [X] Add unit and integration tests (ported from [contrib-auto-ext-amqp](https://github.com/opentelemetry-php/contrib-auto-ext-amqp))
 - [ ] Add spans for everything beyond the current implementation that makes sense
 - [ ] Add metrics
 - [ ] Write or generate documentation about everything that this package collects traces and metrics on

@@ -24,4 +24,9 @@
     <extensions>
         <bootstrap class="Ergebnis\PHPUnit\SlowTestDetector\Extension"/>
     </extensions>
+    <groups>
+        <exclude>
+            <group>functional</group>
+        </exclude>
+    </groups>
 </phpunit>

@@ -15,3 +15,6 @@ jobs:
   ci:
     name: Continuous Integration
     uses: WyriHaximus/github-workflows/.github/workflows/package.yaml@main
+    with:
+      env: '{"TEST_RABBITMQ_CONNECTION_URI":"amqp://testuser:testpassword@rabbit_node_1:5672/testvhost"}'
+      services: '{"rabbit_node_1":{"image":"rabbitmq:3-management","env":{"RABBITMQ_DEFAULT_USER":"testuser","RABBITMQ_DEFAULT_PASS":"testpassword","RABBITMQ_DEFAULT_VHOST":"testvhost"},"options":"--health-cmd \"rabbitmq-diagnostics -q ping\" --health-interval 10s --health-timeout 5s --health-retries 10"}}'
