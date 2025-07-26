@@ -15,9 +15,9 @@ SLIM_DOCKER_IMAGE="-slim"
 NTS_OR_ZTS_DOCKER_IMAGE="nts"
 OTEL_PHP_FIBERS_ENABLED?=true
 NEEDS_DOCKER_SOCKET=FALSE
-HAS_EXTRA_SERVICES=FALSE
-ALL_HAS_DIRECT_DOCKER_TASKS=FALSE
-CONTRIB_HAS_DIRECT_DOCKER_TASKS=FALSE
+HAS_EXTRA_SERVICES=TRUE
+ALL_HAS_DIRECT_DOCKER_TASKS=TRUE
+CONTRIB_HAS_DIRECT_DOCKER_TASKS=TRUE
 ON_INSTALL_OR_UPDATE_HAS_DIRECT_DOCKER_TASKS=FALSE
 PHP_VERSION="8.4"
 CONTAINER_NAME=$(shell echo "${CONTAINER_REGISTRY_REPO}:${PHP_VERSION}-${NTS_OR_ZTS_DOCKER_IMAGE}-alpine${SLIM_DOCKER_IMAGE}-dev")
@@ -445,6 +445,27 @@ migrations-git-enforce-agents-md-contents: #### Enforce `AGENTS.md` contents ##*
 
 
 ## Our default jobs
+ifeq ("$(IN_DOCKER)","FALSE")
+DOCKER_COMMON_OPS:=${DOCKER_COMMON_OPS} --add-host=host.docker.internal:host-gateway
+DOCKER_RUN_WITH_SOCKET:=docker run --rm -i ${DOCKER_SECURITY_OPS} ${DOCKER_COMMON_NON_INTERACTIVE_OPS} ${DOCKER_COMMON_OPS} ${DOCKER_SOCKET_OPS} "${CONTAINER_NAME}${DOCKER_SOCKET_CONTAINER_NAME_SUFFIX}"
+endif
+
+extra-services-up: #### Start RabbitMQ for integration tests ##
+	$(MAKE) before-unit-tests-service
+
+extra-services-down: #### Stop RabbitMQ ##
+	$(MAKE) after-unit-tests-service
+
+before-unit-tests-service: #### Start RabbitMQ for integration tests ##
+	$(MAKE) -C etc/tls all
+	docker compose up -d --wait
+	sleep 3
+	docker compose exec -T rabbit_node_1 rabbitmqctl await_startup
+	docker compose exec -T rabbit_node_1 rabbitmq-diagnostics -q check_port_connectivity
+
+after-unit-tests-service: #### Stop RabbitMQ ##
+	docker compose down --remove-orphans
+	sleep 3
 
 on-install-or-update: ## Tasks, like migrations, that specifically have be run after composer install or update. These will also run by self hosted Renovate ####
 ifeq ("$(ON_INSTALL_OR_UPDATE_HAS_DIRECT_DOCKER_TASKS)","TRUE")
@@ -481,13 +502,24 @@ stan: ## Run static analysis (PHPStan) ##*LCH*##^static-analysis^##
 	$(DOCKER_SHELL) vendor/bin/phpstan analyse --ansi --configuration=./etc/qa/phpstan.neon
 
 unit-testing: ## Run tests ##*AE*##^unit-tests^##
-	$(DOCKER_RUN_WITH_SOCKET) vendor/bin/phpunit --colors=always -c ./etc/qa/phpunit.xml --coverage-text --coverage-html ./var/phpunit/coverage --coverage-clover ./var/phpunit/coverage/clover.xml
-	$(MAKE) coverage-guard
+ifeq ("$(IN_CI)","TRUE")
+	$(DOCKER_RUN_WITH_SOCKET) vendor/bin/phpunit --colors=always -c ./etc/qa/phpunit.xml --coverage-text --coverage-html ./var/phpunit/coverage --coverage-clover ./var/phpunit/coverage/clover.xml && $(MAKE) coverage-guard
+else
+	@bash -ec '	$(MAKE) before-unit-tests-service; \
+	trap "$(MAKE) after-unit-tests-service || true" EXIT; \
+	$(DOCKER_RUN_WITH_SOCKET) vendor/bin/phpunit --colors=always -c ./etc/qa/phpunit.xml --coverage-text --coverage-html ./var/phpunit/coverage --coverage-clover ./var/phpunit/coverage/clover.xml && $(MAKE) coverage-guard'
+endif
 
 unit-testing-filter: ## Run tests with specified filter ####^unit-tests^##
+ifeq ("$(IN_CI)","TRUE")
 	$(DOCKER_RUN_WITH_SOCKET) vendor/bin/phpunit --colors=always --filter=$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS)) -c ./etc/qa/phpunit.xml --coverage-text --coverage-html ./var/phpunit/coverage --coverage-clover ./var/phpunit/coverage/clover.xml
+else
+	@bash -ec '	$(MAKE) before-unit-tests-service; \
+	trap "$(MAKE) after-unit-tests-service || true" EXIT; \
+	$(DOCKER_RUN_WITH_SOCKET) vendor/bin/phpunit --colors=always --filter=$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS)) -c ./etc/qa/phpunit.xml --coverage-text --coverage-html ./var/phpunit/coverage --coverage-clover ./var/phpunit/coverage/clover.xml'
+endif
 
-unit-testing-raw: ## Run tests ##*D*##^unit-tests^##
+unit-testing-raw: ## Run tests ##^unit-tests^##
 	php vendor/phpunit/phpunit/phpunit --colors=always -c ./etc/qa/phpunit.xml --coverage-text --coverage-html ./var/phpunit/coverage --coverage-clover ./var/phpunit/coverage/clover.xml
 	$(MAKE) coverage-guard-raw
 
@@ -498,7 +530,13 @@ coverage-guard-raw: ## Enforce code coverage rules ####
 	php vendor/bin/coverage-guard check ./var/phpunit/coverage/clover.xml --config=./etc/qa/coverage-guard.php
 
 mutation-testing: ## Run mutation testing ##*LCH*##^static-analysis|unit-tests^##
+ifeq ("$(IN_CI)","TRUE")
 	$(DOCKER_RUN_WITH_SOCKET) vendor/bin/infection --ansi --log-verbosity=all --ignore-msi-with-no-mutations --configuration=./etc/qa/infection.json5 --static-analysis-tool=phpstan --static-analysis-tool-options="--memory-limit=-1" --threads=$(MUTATION_THREADS)
+else
+	@bash -ec '	$(MAKE) before-unit-tests-service; \
+	trap "$(MAKE) after-unit-tests-service || true" EXIT; \
+	$(DOCKER_RUN_WITH_SOCKET) vendor/bin/infection --ansi --log-verbosity=all --ignore-msi-with-no-mutations --configuration=./etc/qa/infection.json5 --static-analysis-tool=phpstan --static-analysis-tool-options="--memory-limit=-1" --threads=$(MUTATION_THREADS)'
+endif
 
 mutation-testing-raw: ## Run mutation testing ####^static-analysis|unit-tests^##
 	vendor/bin/infection --ansi --log-verbosity=all --ignore-msi-with-no-mutations --configuration=./etc/qa/infection.json5 --static-analysis-tool=phpstan --static-analysis-tool-options="--memory-limit=-1" --threads=$(MUTATION_THREADS)
@@ -565,9 +603,11 @@ help: ## Show this help ####
 	@printf "  make [target]\n"
 	@printf "\n"
 	@printf "\033[33mTargets:\033[0m\n"
+	@printf "  \033[32m%-32s\033[0m %s\n" 'after-unit-tests-service' 'Stop RabbitMQ'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'all' 'Runs everything'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'backward-compatibility-check' 'Check code for backwards incompatible changes'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'backward-compatibility-check-raw' 'Check code for backwards incompatible changes, doesn'\''t ignore the failure'
+	@printf "  \033[32m%-32s\033[0m %s\n" 'before-unit-tests-service' 'Start RabbitMQ for integration tests'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'composer-normalize' 'Normalize composer.json'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'composer-outdated' 'Show outdated packages'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'composer-require' 'Require passed dependencies'
@@ -582,6 +622,8 @@ help: ## Show this help ####
 	@printf "  \033[32m%-32s\033[0m %s\n" 'cs' 'Check the code for code style issues'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'cs-fix' 'Fix any automatically fixable code style issues'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'cs-fix-debug' 'Fix any automatically fixable code style issues, but with debugging output'
+	@printf "  \033[32m%-32s\033[0m %s\n" 'extra-services-down' 'Stop RabbitMQ'
+	@printf "  \033[32m%-32s\033[0m %s\n" 'extra-services-up' 'Start RabbitMQ for integration tests'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'help' 'Show this help'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'help-contrib' 'Show the migrations help'
 	@printf "  \033[32m%-32s\033[0m %s\n" 'help-migrations' 'Show the migrations help'
@@ -750,7 +792,7 @@ task-list-ci-all: ## CI: Generate a JSON array of jobs to run on all variations
 	@echo "[\"composer-validate\",\"syntax-php\",\"cs\",\"stan\",\"unit-testing\",\"mutation-testing\",\"composer-require-checker\",\"composer-unused\",\"backward-compatibility-check\"]" ## Count: 9
 
 task-list-ci-dos: ## CI: Generate a JSON array of jobs to run Directly on the OS variations
-	@echo "[\"unit-testing-raw\"]" ## Count: 1
+	@echo "[]" ## Count: 1 0 0
 
 task-list-ci-low: ## CI: Generate a JSON array of jobs to run against the lowest dependencies on the primary threading target
 	@echo "[\"syntax-php\",\"cs\",\"stan\",\"mutation-testing\"]" ## Count: 4
