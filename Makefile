@@ -27,6 +27,7 @@ else
 		-v "${COMPOSER_CACHE_DIR}:${COMPOSER_CONTAINER_CACHE_DIR}" \
 		-w "`pwd`" \
 		-e OTEL_PHP_FIBERS_ENABLED="true" \
+		-e TEST_RABBITMQ_CONNECTION_URI="amqp://testuser:testpassword@bunny-rabbit_node_1-1:5672/testvhost" \
 		"${CONTAINER_NAME}"
 endif
 
@@ -55,9 +56,13 @@ stan: ## Run static analysis (PHPStan) ##*LCH*##
 	$(DOCKER_RUN) vendor/bin/phpstan analyse etc src tests --level max --ansi -c ./etc/qa/phpstan.neon
 
 unit-testing: ## Run tests ##*A*##
-	$(DOCKER_RUN) vendor/bin/phpunit --colors=always -c ./etc/qa/phpunit.xml --coverage-text --coverage-html ./var/tests-unit-coverage-html --coverage-clover ./var/tests-unit-clover-coverage.xml
-	$(DOCKER_RUN) test -n "$(COVERALLS_REPO_TOKEN)" && test -n "$(COVERALLS_RUN_LOCALLY)" && test -f ./var/tests-unit-clover-coverage.xml && vendor/bin/php-coveralls -v --coverage_clover ./build/logs/clover.xml --json_path ./var/tests-unit-clover-coverage-upload.json || true
-
+ifeq ("$(wildcard test/tls/ca.pem)","")
+	make -C etc/tls all
+endif
+	docker compose up -d
+	sleep 6 # Find a good wait-for solution
+	($(DOCKER_RUN) vendor/bin/phpunit --colors=always -c ./etc/qa/phpunit.xml --coverage-text --coverage-html ./var/tests-unit-coverage-html --coverage-clover ./var/tests-unit-clover-coverage.xml) || docker compose down
+	docker compose down
 unit-testing-raw: ## Run tests ##*D*## ####
 	php vendor/phpunit/phpunit/phpunit --colors=always -c ./etc/qa/phpunit.xml --coverage-text --coverage-html ./var/tests-unit-coverage-html --coverage-clover ./var/tests-unit-clover-coverage.xml
 	test -n "$(COVERALLS_REPO_TOKEN)" && test -n "$(COVERALLS_RUN_LOCALLY)" && test -f ./var/tests-unit-clover-coverage.xml && ./vendor/bin/php-coveralls -v --coverage_clover ./build/logs/clover.xml --json_path ./var/tests-unit-clover-coverage-upload.json || true
@@ -94,7 +99,6 @@ outdated: ### Show outdated dependencies ####
 
 shell: ## Provides Shell access in the expected environment ####
 	$(DOCKER_RUN) bash
-
 
 help: ## Show this help ####
 	@printf "\033[33mUsage:\033[0m\n  make [target]\n\n\033[33mTargets:\033[0m\n"
