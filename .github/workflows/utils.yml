@@ -27,3 +27,4 @@ jobs:
   ci:
     name: Continuous Integration
     uses: WyriHaximus/github-workflows/.github/workflows/package-utils.yaml@run-renovate-on-github-actions
+    secrets: inherit
