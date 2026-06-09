@@ -24,6 +24,7 @@ use function is_string;
 use function OpenTelemetry\Instrumentation\hook;
 use function sprintf;
 
+/** @api */
 final class BunnyInstrumentation
 {
     public const string NAME = 'bunny';
@@ -86,16 +87,23 @@ final class BunnyInstrumentation
                     ->setParent($parentContext)
                     ->setSpanKind(SpanKind::KIND_PRODUCER)
                     // code
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::CODE_FUNCTION_NAME, sprintf('%s::%s', $class, $function))
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::CODE_FILE_PATH, $filename)
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::CODE_LINE_NUMBER, $lineno)
                     // RabbitMQ
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::MESSAGING_RABBITMQ_DESTINATION_ROUTING_KEY, $routingKey)
                     // messaging
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::MESSAGING_SYSTEM, 'amqp')
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::MESSAGING_OPERATION_TYPE, 'publish')
 
                     ->setAttribute('messaging.destination', $routingKey)
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::MESSAGING_DESTINATION_NAME, $routingKey)
                     ->setAttribute('messaging.destination_publish.name', $routingKey)
 
@@ -105,7 +113,9 @@ final class BunnyInstrumentation
                     ->setAttribute('messaging.rabbitmq.destination.routing.key', $routingKey)
 
                     // network
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::NETWORK_PROTOCOL_NAME, 'amqp')
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::NETWORK_TRANSPORT, 'tcp');
 
                 $span    = $spanBuilder->startSpan();
@@ -164,17 +174,25 @@ final class BunnyInstrumentation
                         ->setParent($parentContext)
                         ->setSpanKind(SpanKind::KIND_CONSUMER)
                         // code
+                        /** @phpstan-ignore classConstant.deprecatedInterface */
                         ->setAttribute(TraceAttributes::CODE_FUNCTION_NAME, sprintf('%s::%s', $class, $function))
+                        /** @phpstan-ignore classConstant.deprecatedInterface */
                         ->setAttribute(TraceAttributes::CODE_FILE_PATH, $filename)
+                        /** @phpstan-ignore classConstant.deprecatedInterface */
                         ->setAttribute(TraceAttributes::CODE_LINE_NUMBER, $lineno)
                         // RabbitMQ
+                        /** @phpstan-ignore classConstant.deprecatedInterface */
                         ->setAttribute(TraceAttributes::MESSAGING_RABBITMQ_DESTINATION_ROUTING_KEY, $message->routingKey)
+                        /** @phpstan-ignore classConstant.deprecatedInterface */
                         ->setAttribute(TraceAttributes::MESSAGING_RABBITMQ_MESSAGE_DELIVERY_TAG, $message->deliveryTag)
                         // messaging
+                        /** @phpstan-ignore classConstant.deprecatedInterface */
                         ->setAttribute(TraceAttributes::MESSAGING_SYSTEM, 'amqp')
+                        /** @phpstan-ignore classConstant.deprecatedInterface */
                         ->setAttribute(TraceAttributes::MESSAGING_OPERATION_TYPE, 'receive')
 
                         ->setAttribute('messaging.destination', $queue)
+                        /** @phpstan-ignore classConstant.deprecatedInterface */
                         ->setAttribute(TraceAttributes::MESSAGING_DESTINATION_NAME, $queue)
                         ->setAttribute('messaging.destination_publish.name', $queue)
 
@@ -184,7 +202,9 @@ final class BunnyInstrumentation
                         ->setAttribute('messaging.rabbitmq.destination.routing.key', $queue)
 
                         // network
+                        /** @phpstan-ignore classConstant.deprecatedInterface */
                         ->setAttribute(TraceAttributes::NETWORK_PROTOCOL_NAME, 'amqp')
+                        /** @phpstan-ignore classConstant.deprecatedInterface */
                         ->setAttribute(TraceAttributes::NETWORK_TRANSPORT, 'tcp');
 
                     $span    = $spanBuilder->startSpan();
@@ -197,6 +217,7 @@ final class BunnyInstrumentation
                     } catch (Throwable $t) {
                         $span
                             ->setStatus(StatusCode::STATUS_ERROR, $t->getMessage())
+                            /** @phpstan-ignore classConstant.deprecatedInterface */
                             ->setAttribute(TraceAttributes::ERROR_TYPE, $t::class);
                     } finally {
                         $span->end();
@@ -235,11 +256,16 @@ final class BunnyInstrumentation
                     ->setParent($parent)
                     ->setSpanKind(SpanKind::KIND_CLIENT)
                     // code
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::CODE_FUNCTION_NAME, sprintf('%s::%s', $class, $function))
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::CODE_FILE_PATH, $filename)
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::CODE_LINE_NUMBER, $lineno)
                     // messaging
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::MESSAGING_SYSTEM, 'amqp')
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::MESSAGING_OPERATION_TYPE, $method)
 
                     ->setAttribute('messaging.destination.kind', 'queue')
@@ -248,9 +274,12 @@ final class BunnyInstrumentation
                     ->setAttribute('messaging.rabbitmq.destination.routing_key', $message->routingKey)
                     ->setAttribute('messaging.destination_publish.name', $message->routingKey)
 
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::MESSAGING_CLIENT_ID, $message->consumerTag)
 
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::NETWORK_PROTOCOL_NAME, 'amqp')
+                    /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::NETWORK_TRANSPORT, 'tcp');
 
                 $span = $builder->startSpan();
