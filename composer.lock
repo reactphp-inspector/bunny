@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a6e60a559caab18747dd40d79da1ae7a",
+    "content-hash": "f9408bb50520af7c5f0103b307fa7bf3",
     "packages": [
         {
             "name": "brick/math",
@@ -67,7 +67,7 @@
         },
         {
             "name": "bunny/bunny",
-            "version": "0.6.x-dev",
+            "version": "v0.6.0-alpha.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jakubkulhan/bunny.git",
@@ -98,7 +98,6 @@
                 "squizlabs/php_codesniffer": "^3.11",
                 "wyrihaximus/react-phpunit-run-tests-in-fiber": "^1.0 || ^2.0"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -135,7 +134,7 @@
             ],
             "support": {
                 "issues": "https://github.com/jakubkulhan/bunny/issues",
-                "source": "https://github.com/jakubkulhan/bunny/tree/0.6.x"
+                "source": "https://github.com/jakubkulhan/bunny/tree/v0.6.0-alpha.3"
             },
             "time": "2026-07-13T05:47:21+00:00"
         },
@@ -11287,7 +11286,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "bunny/bunny": 20
+        "bunny/bunny": 15
     },
     "prefer-stable": false,
     "prefer-lowest": false,
