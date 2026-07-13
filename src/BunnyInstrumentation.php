@@ -43,7 +43,6 @@ final class BunnyInstrumentation
      */
     private const string INSTRUMENTATION_LIBRARY_NAME = 'io.opentelemetry.contrib.php.bunny';
 
-    /** @phpstan-ignore shipmonk.deadMethod */
     public static function register(): void
     {
         $instrumentation = new CachedInstrumentation(
