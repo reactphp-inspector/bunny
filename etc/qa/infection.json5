@@ -1,8 +1,8 @@
 {
-    "timeout": 300,
+    "timeout": 120,
     "source": {
         "directories": [
-            "src"
+            "../../src"
         ]
     },
     "logs": {
@@ -12,13 +12,10 @@
         "perMutator": "../../var/infection-per-mutator.md",
         "github": true
     },
+    "minMsi": 100,
+    "minCoveredMsi": 100,
+    "ignoreMsiWithNoMutations": true,
     "mutators": {
-        "@default": true,
-        "ArrayItemRemoval": false,
-        "MethodCallRemoval": {
-            "ignore": [
-                "Mammatus\\ContainerFactory::create"
-            ]
-        }
+        "@default": true
     }
 }

@@ -4,12 +4,9 @@ parameters:
 		- ../../etc
 		- ../../src
 		- ../../tests
+	excludePaths:
+		- ../../tests/ChannelStub.php
 	ignoreErrors:
 		-
 			identifier: ergebnis.noParameterWithNullableTypeDeclaration
 			path: ../../src/BunnyInstrumentation.php
-
-#	ergebnis:
-#		noExtends:
-#			classesAllowedToBeExtended:
-#				- Psr\Log\AbstractLogger

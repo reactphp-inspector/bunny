@@ -132,7 +132,7 @@ final class BunnyInstrumentation
             post: static function (
                 ChannelInterface $channel,
                 array $params,
-                bool|null $success,
+                int|bool|null $return,
                 Throwable|null $exception,
             ): void {
                 $scope = Context::storage()->scope();
