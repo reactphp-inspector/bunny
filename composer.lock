@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb94eec3ed651be49750a5ae6cac2b9b",
+    "content-hash": "13d74b16dc7d75ad1deb4fd97cd304cc",
     "packages": [
         {
             "name": "brick/math",
@@ -6414,16 +6414,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.5.8",
+            "version": "2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "861c77fd2a6d45317a401f4e0b617f947e8b6f96"
+                "reference": "b8e68f058bca43e01a2e1caa51ef022d6551ed95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/861c77fd2a6d45317a401f4e0b617f947e8b6f96",
-                "reference": "861c77fd2a6d45317a401f4e0b617f947e8b6f96",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/b8e68f058bca43e01a2e1caa51ef022d6551ed95",
+                "reference": "b8e68f058bca43e01a2e1caa51ef022d6551ed95",
                 "shasum": ""
             },
             "require": {
@@ -6462,7 +6462,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.5.8"
+                "source": "https://github.com/rectorphp/rector/tree/2.6.1"
             },
             "funding": [
                 {
@@ -6470,7 +6470,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-27T06:19:16+00:00"
+            "time": "2026-08-03T17:30:34+00:00"
         },
         {
             "name": "revolt/event-loop",
@@ -10817,34 +10817,34 @@
         },
         {
             "name": "wyrihaximus/async-test-utilities",
-            "version": "13.4.1",
+            "version": "13.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WyriHaximus/php-async-test-utilities.git",
-                "reference": "a0aa6b33a2ef02373937872f34b6175cab745bf8"
+                "reference": "3d2f7e9dab5519d8fce0b841add6e1595a34f6fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WyriHaximus/php-async-test-utilities/zipball/a0aa6b33a2ef02373937872f34b6175cab745bf8",
-                "reference": "a0aa6b33a2ef02373937872f34b6175cab745bf8",
+                "url": "https://api.github.com/repos/WyriHaximus/php-async-test-utilities/zipball/3d2f7e9dab5519d8fce0b841add6e1595a34f6fe",
+                "reference": "3d2f7e9dab5519d8fce0b841add6e1595a34f6fe",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.4",
-                "phpunit/phpunit": "^13.2.4",
+                "phpunit/phpunit": "^13.2.6",
                 "react/async": "^4.3.0",
                 "react/event-loop": "^1.6.0",
                 "react/promise": "^3.3.0",
                 "wyrihaximus/phpstan-react": "^2.0.0",
                 "wyrihaximus/react-phpunit-run-tests-in-fiber": "^4.0.0",
-                "wyrihaximus/test-utilities": "^13.4.0"
+                "wyrihaximus/test-utilities": "^13.5.1"
             },
             "conflict": {
                 "composer/compoer": "<2.6.0"
             },
             "require-dev": {
                 "react/promise-timer": "^1.11.0",
-                "wyrihaximus/makefiles": "^0.13.1"
+                "wyrihaximus/makefiles": "^0.13.3"
             },
             "type": "library",
             "extra": {
@@ -10872,7 +10872,7 @@
             "description": "Test utilities for api-clients packages",
             "support": {
                 "issues": "https://github.com/WyriHaximus/php-async-test-utilities/issues",
-                "source": "https://github.com/WyriHaximus/php-async-test-utilities/tree/13.4.1"
+                "source": "https://github.com/WyriHaximus/php-async-test-utilities/tree/13.5.1"
             },
             "funding": [
                 {
@@ -10880,7 +10880,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-18T21:49:09+00:00"
+            "time": "2026-08-03T17:02:23+00:00"
         },
         {
             "name": "wyrihaximus/coding-standard",
@@ -11225,16 +11225,16 @@
         },
         {
             "name": "wyrihaximus/test-utilities",
-            "version": "13.4.0",
+            "version": "13.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WyriHaximus/php-test-utilities.git",
-                "reference": "436d85d15fd94645acc3a33ef85024c86df92227"
+                "reference": "688dcc6482e739e535e1daef11b7b689665cbf1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WyriHaximus/php-test-utilities/zipball/436d85d15fd94645acc3a33ef85024c86df92227",
-                "reference": "436d85d15fd94645acc3a33ef85024c86df92227",
+                "url": "https://api.github.com/repos/WyriHaximus/php-test-utilities/zipball/688dcc6482e739e535e1daef11b7b689665cbf1a",
+                "reference": "688dcc6482e739e535e1daef11b7b689665cbf1a",
                 "shasum": ""
             },
             "require": {
@@ -11244,29 +11244,30 @@
                 "ext-hash": "^8.4",
                 "ext-json": "^8.4",
                 "icanhazstring/composer-unused": "^0.9.6",
-                "infection/infection": "^0.34.0",
+                "infection/infection": "^0.34.1",
                 "maglnet/composer-require-checker": "^4.20.0",
                 "mockery/mockery": "^1.6.12",
                 "php": "^8.4",
                 "php-parallel-lint/php-console-highlighter": "^1.0.0",
                 "php-parallel-lint/php-parallel-lint": "^1.4.0",
-                "phpstan/phpstan": "^2.2.5",
-                "phpunit/phpunit": "^13.2.4",
-                "rector/rector": "^2.5.7",
+                "phpstan/phpstan": "^2.2.7",
+                "phpunit/phpunit": "^13.2.6",
+                "rector/rector": "^2.6.0",
                 "roave/backward-compatibility-check": "^8.19.0",
                 "squizlabs/php_codesniffer": "^4.0.1",
                 "wyrihaximus/coding-standard": "^4.2.0",
-                "wyrihaximus/phpstan-rules-wrapper": "^14.1.0"
+                "wyrihaximus/phpstan-rules-wrapper": "^14.2.0"
             },
             "conflict": {
                 "composer-unused/symbol-parser": "<0.3.3",
+                "composer/composer": "<2.10.2",
                 "composer/pcre": "<3.3.2",
                 "sanmai/di-container": "<0.1.17",
                 "sanmai/pipeline": "<7.9",
                 "wyrihaximus/makefiles": "<0.5.0"
             },
             "require-dev": {
-                "wyrihaximus/makefiles": "^0.13.1"
+                "wyrihaximus/makefiles": "^0.13.3"
             },
             "suggest": {
                 "wyrihaximus/async-test-utilities": "The recommended addition to this package when building ReactPHP packages and projects.",
@@ -11299,7 +11300,7 @@
             "description": "🛠️ Test utilities for api-clients packages",
             "support": {
                 "issues": "https://github.com/WyriHaximus/php-test-utilities/issues",
-                "source": "https://github.com/WyriHaximus/php-test-utilities/tree/13.4.0"
+                "source": "https://github.com/WyriHaximus/php-test-utilities/tree/13.5.1"
             },
             "funding": [
                 {
@@ -11307,7 +11308,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-18T17:45:57+00:00"
+            "time": "2026-08-03T15:22:38+00:00"
         },
         {
             "name": "yamadashy/phpstan-friendly-formatter",
