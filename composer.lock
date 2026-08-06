@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "13d74b16dc7d75ad1deb4fd97cd304cc",
+    "content-hash": "2f731f6a7d8728e155bc159f967efba4",
     "packages": [
         {
             "name": "brick/math",
@@ -67,16 +67,16 @@
         },
         {
             "name": "bunny/bunny",
-            "version": "v0.6.0-alpha.3",
+            "version": "v0.6.0-alpha.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jakubkulhan/bunny.git",
-                "reference": "113cc8c174e7dcdd74cb71e13d025a61901d1f3b"
+                "reference": "29d675881b58f8c6a24872b4837fcb097b566024"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jakubkulhan/bunny/zipball/113cc8c174e7dcdd74cb71e13d025a61901d1f3b",
-                "reference": "113cc8c174e7dcdd74cb71e13d025a61901d1f3b",
+                "url": "https://api.github.com/repos/jakubkulhan/bunny/zipball/29d675881b58f8c6a24872b4837fcb097b566024",
+                "reference": "29d675881b58f8c6a24872b4837fcb097b566024",
                 "shasum": ""
             },
             "require": {
@@ -134,9 +134,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jakubkulhan/bunny/issues",
-                "source": "https://github.com/jakubkulhan/bunny/tree/v0.6.0-alpha.3"
+                "source": "https://github.com/jakubkulhan/bunny/tree/v0.6.0-alpha.4"
             },
-            "time": "2026-07-13T05:47:21+00:00"
+            "time": "2026-08-03T18:56:22+00:00"
         },
         {
             "name": "composer/semver",
