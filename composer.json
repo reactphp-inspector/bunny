@@ -15,7 +15,7 @@
   },
   "require-dev": {
     "wyrihaximus/async-test-utilities": "^13.5.1",
-    "wyrihaximus/makefiles": "^0.13.3"
+    "wyrihaximus/makefiles": "dev-add-support-for-services as 0.13.4"
   },
   "autoload": {
     "psr-4": {

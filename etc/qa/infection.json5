@@ -1,5 +1,7 @@
 {
     "timeout": 120,
+    "initialTestsPhpOptions": "-d memory_limit=-1",
+    "staticAnalysisToolOptions": "--memory-limit=-1",
     "source": {
         "directories": [
             "../../src"
