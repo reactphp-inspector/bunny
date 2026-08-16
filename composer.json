@@ -5,7 +5,7 @@
   "require": {
     "php": "^8.4",
     "ext-opentelemetry": "^1.1.3",
-    "bunny/bunny": "0.6.0-alpha.3",
+    "bunny/bunny": "0.6.0-alpha.3 || 0.6.0-alpha.4",
     "nyholm/psr7": "^1.8.2",
     "open-telemetry/api": "^1.10.0",
     "open-telemetry/context": "^1.5.0",
