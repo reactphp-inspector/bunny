@@ -5,6 +5,7 @@ parameters:
 		- ../../src
 		- ../../tests
 	excludePaths:
+		- ../../etc/patch-makefile-empty-ci-dos.php
 		- ../../tests/ChannelStub.php
 	ignoreErrors:
 		-

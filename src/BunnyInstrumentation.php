@@ -19,8 +19,6 @@ use OpenTelemetry\SemConv\TraceAttributes;
 use OpenTelemetry\SemConv\Version;
 use Throwable;
 
-use function assert;
-use function is_string;
 use function OpenTelemetry\Instrumentation\hook;
 use function sprintf;
 
@@ -56,6 +54,12 @@ final class BunnyInstrumentation
 
         self::createInteractionWithQueueSpan($instrumentation, 'ack');
         self::createInteractionWithQueueSpan($instrumentation, 'nack');
+        self::createInteractionWithQueueSpan($instrumentation, 'reject');
+    }
+
+    private static function destinationPublishName(string $exchange, string $routingKey): string
+    {
+        return $exchange !== '' ? $exchange . ' ' . $routingKey : $routingKey;
     }
 
     private static function publish(CachedInstrumentation $instrumentation): void
@@ -72,17 +76,18 @@ final class BunnyInstrumentation
                 int|null $lineno,
             ) use ($instrumentation): array {
                 // string $body, array $headers = [], string $exchange = '', string $routingKey = '', bool $mandatory = false, bool $immediate = false
+                /** @var string $body */
                 /** @var array<string, mixed> $headers */
+                /** @var string $exchange */
+                /** @var string $routingKey */
                 [$body, $headers, $exchange, $routingKey] = $params;
-                assert(is_string($body));
-                assert(is_string($exchange));
-                assert(is_string($routingKey));
 
-                $parentContext = Context::getCurrent();
+                $parentContext          = Context::getCurrent();
+                $destinationPublishName = self::destinationPublishName($exchange, $routingKey);
 
                 $spanBuilder = $instrumentation
                     ->tracer()
-                    ->spanBuilder($routingKey . ' publish')
+                    ->spanBuilder($destinationPublishName . ' publish')
                     ->setParent($parentContext)
                     ->setSpanKind(SpanKind::KIND_PRODUCER)
                     // code
@@ -104,9 +109,9 @@ final class BunnyInstrumentation
                     ->setAttribute('messaging.destination', $routingKey)
                     /** @phpstan-ignore classConstant.deprecatedInterface */
                     ->setAttribute(TraceAttributes::MESSAGING_DESTINATION_NAME, $routingKey)
-                    ->setAttribute('messaging.destination_publish.name', $routingKey)
+                    ->setAttribute('messaging.destination_publish.name', $destinationPublishName)
 
-                    ->setAttribute('messaging.destination.kind', 'queue')
+                    ->setAttribute('messaging.destination.kind', $exchange !== '' ? 'topic' : 'queue')
 
                     ->setAttribute('messaging.rabbitmq.routing.key', $routingKey)
                     ->setAttribute('messaging.rabbitmq.destination.routing.key', $routingKey)
@@ -120,7 +125,6 @@ final class BunnyInstrumentation
                 $span    = $spanBuilder->startSpan();
                 $context = $span->storeInContext($parentContext);
 
-                $headers    = $params[1] ?? [];
                 $propagator = Globals::propagator();
                 $propagator->inject($headers, ArrayAccessGetterSetter::getInstance(), $context);
                 $params[1] = $headers;
@@ -160,8 +164,8 @@ final class BunnyInstrumentation
             'consume',
             pre: static function (ChannelInterface $channel, array $params, string $class, string $function, string|null $filename, int|null $lineno) use ($instrumentation): array {
                 /** @var callable(BunnyMessage): mixed $callback */
+                /** @var string $queue */
                 [$callback, $queue] = $params;
-                assert(is_string($queue));
 
                 /** @phpstan-ignore shipmonk.missingNativeReturnTypehint */
                 $params[0] = static function (BunnyMessage $message) use ($callback, $queue, $instrumentation, $class, $function, $filename, $lineno) {
@@ -244,8 +248,8 @@ final class BunnyInstrumentation
                 $instrumentation,
                 $method,
             ): array {
+                /** @var BunnyMessage $message */
                 [$message] = $params;
-                assert($message instanceof BunnyMessage);
 
                 $parent = Context::getCurrent();
 
