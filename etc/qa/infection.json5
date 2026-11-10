@@ -18,5 +18,6 @@
     "mutators": {
         "@default": true
     },
-    "threads": 64
+    "threads": 64,
+    "testFrameworkOptions": "--exclude-group=functional"
 }
