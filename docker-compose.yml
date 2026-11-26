@@ -1,6 +1,6 @@
 services:
   rabbit_node_1:
-    image: 'rabbitmq:3-management'
+    image: 'rabbitmq:4-management'
     entrypoint: /opt/bunny/etc/docker/rabbitmq/entrypoint.sh /usr/local/bin/docker-entrypoint.sh
     command: rabbitmq-server
     environment:
